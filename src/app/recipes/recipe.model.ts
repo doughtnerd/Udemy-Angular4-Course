@@ -3,7 +3,7 @@ export class Recipe {
   private _description: string;
   private _imagePath: string;
 
-  constructor(name: string, description: string, imagePath: string){
+  constructor(name: string, description: string, imagePath: string) {
     this._name = name;
     this._description = description;
     this._imagePath = imagePath;

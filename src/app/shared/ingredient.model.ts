@@ -1,4 +1,4 @@
-export class Ingredient{
+export class Ingredient {
   private _name: string;
   private  _amount: number;
 
