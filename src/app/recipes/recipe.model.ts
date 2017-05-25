@@ -2,7 +2,7 @@ export class Recipe {
   private _name: string;
   private _description: string;
   private _imagePath: string;
-
+  private 
   constructor(name: string, description: string, imagePath: string) {
     this._name = name;
     this._description = description;
