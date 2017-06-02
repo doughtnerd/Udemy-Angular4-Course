@@ -9,16 +9,6 @@ export class HeaderComponent implements OnInit {
 
   @Output() pageSelectedEvent: EventEmitter<string> = new EventEmitter();
 
-  constructor() { }
-
   ngOnInit() {
-  }
-
-  onRecipesClicked() {
-    this.pageSelectedEvent.emit('recipes');
-  }
-
-  onShoppingClicked() {
-    this.pageSelectedEvent.emit('shopping');
   }
 }
