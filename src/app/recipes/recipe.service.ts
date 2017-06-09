@@ -3,6 +3,9 @@ import {Injectable} from '@angular/core';
 import {Ingredient} from "../shared/ingredient.model";
 import {ShoppingListService} from "../shopping-list/shopping-list.service";
 import {Subject} from "rxjs/Subject";
+import {Response, Http} from "@angular/http";
+import 'rxjs/Rx';
+import {Observable} from "rxjs/Observable";
 
 @Injectable()
 export class RecipeService {
@@ -21,7 +24,7 @@ export class RecipeService {
     )
   ];
 
-  constructor(private slService: ShoppingListService) {}
+  constructor(private slService: ShoppingListService, private http: Http) {}
 
   get recipes() {
     return this._recipes.slice();
@@ -48,5 +51,29 @@ export class RecipeService {
   deleteRecipe(index: number) {
     this._recipes.splice(index, 1);
     this.recipesChanged.next(this._recipes);
+  }
+
+  saveRecipes() {
+    return this.http.put('https://udemy-course-project-84038.firebaseio.com/recipes.json', this.recipes);
+  }
+
+  fetchRecipes() {
+    // return this.http.get('https://udemy-course-project-84038.firebaseio.com/recipes.json').map((data: Response) => {
+    //   return data.json();
+    // });
+    const sub = this.http.get('https://udemy-course-project-84038.firebaseio.com/recipes.json').map((response: Response) => {
+      const recipes = response.json();
+      for (const recipe of recipes) {
+        if (!recipe['ingredients']) {
+          recipe.ingredients = [];
+        }
+      }
+      return recipes;
+    });
+    sub.subscribe((response: Response) => {
+      console.log(response.json());
+      this._recipes = response.json();
+      this.recipesChanged.next(this._recipes);
+    });
   }
 }
