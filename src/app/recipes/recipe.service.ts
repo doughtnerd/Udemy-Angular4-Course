@@ -4,8 +4,8 @@ import {Ingredient} from "../shared/ingredient.model";
 import {ShoppingListService} from "../shopping-list/shopping-list.service";
 import {Subject} from "rxjs/Subject";
 import {Response, Http} from "@angular/http";
-import 'rxjs/Rx';
-import {Observable} from "rxjs/Observable";
+import 'rxjs/add/operator/map';
+import {AuthService} from "../auth/auth.service";
 
 @Injectable()
 export class RecipeService {
@@ -24,7 +24,7 @@ export class RecipeService {
     )
   ];
 
-  constructor(private slService: ShoppingListService, private http: Http) {}
+  constructor(private slService: ShoppingListService, private http: Http, private authService: AuthService) {}
 
   get recipes() {
     return this._recipes.slice();
@@ -54,14 +54,16 @@ export class RecipeService {
   }
 
   saveRecipes() {
-    return this.http.put('https://udemy-course-project-84038.firebaseio.com/recipes.json', this.recipes);
+    const token = this.authService.getToken();
+    return this.http.put('https://udemy-course-project-84038.firebaseio.com/recipes.json?auth=' + token, this.recipes);
   }
 
   fetchRecipes() {
     // return this.http.get('https://udemy-course-project-84038.firebaseio.com/recipes.json').map((data: Response) => {
     //   return data.json();
     // });
-    const sub = this.http.get('https://udemy-course-project-84038.firebaseio.com/recipes.json').map((response: Response) => {
+    const token = this.authService.getToken();
+    const sub = this.http.get('https://udemy-course-project-84038.firebaseio.com/recipes.json?auth=' + token).map((response: Response) => {
       const recipes = response.json();
       for (const recipe of recipes) {
         if (!recipe['ingredients']) {
@@ -70,9 +72,9 @@ export class RecipeService {
       }
       return recipes;
     });
-    sub.subscribe((response: Response) => {
-      console.log(response.json());
-      this._recipes = response.json();
+    sub.subscribe((response: Recipe[]) => {
+      console.log(response);
+      this._recipes = response;
       this.recipesChanged.next(this._recipes);
     });
   }
