@@ -1,4 +1,4 @@
-import {RouterModule, Routes} from "@angular/router";
+import {PreloadAllModules, RouterModule, Routes} from "@angular/router";
 import {NgModule} from "@angular/core";
 import {RecipesComponent} from "./recipes/recipes.component";
 import {ShoppingListComponent} from "./shopping-list/shopping-list.component";
@@ -8,7 +8,7 @@ import {RecipeEditComponent} from "./recipes/recipe-edit/recipe-edit.component";
 import {SignupComponent} from "./auth/signup/signup.component";
 import {SigninComponent} from "./auth/signin/signin.component";
 import {AuthGuard} from "./auth/auth-guard.service";
-import {HomeComponent} from "./home/home.component";
+import {HomeComponent} from "./core/home/home.component";
 
 const appRoutes: Routes = [
   {path: '', component: HomeComponent},
@@ -16,7 +16,7 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(appRoutes)],
+  imports: [RouterModule.forRoot(appRoutes, {preloadingStrategy: PreloadAllModules})],
   exports: [RouterModule]
 })
 export class AppRoutingModule {
